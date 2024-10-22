@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Frontend Service (Node.js)
+  frontend:
+    build:
+      context: ./frontend       # Build from the frontend directory
+    ports:
+      - "3000:3000"             # Expose the frontend app on port 3000
+    depends_on:
+      - backend                 # The frontend service depends on the backend
+    networks:
+      - app-network
+
+  # Backend Service (Flask)
+  backend:
+    build:
+      context: ./backend        # Build from the backend directory
+    ports:
+      - "5000:5000"             # Expose the Flask app on port 5000
+    depends_on:
+      - database                # The backend depends on the database
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@database:5432/mydatabase
+    networks:
+      - app-network
+
+  # PostgreSQL Database Service
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    volumes:
+      - db-data:/var/lib/postgresql/data  # Persist database data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql # Optional initialization script
+    networks:
+      - app-network
+
+# Define a custom network for communication between services
+networks:
+  app-network:
+    driver: bridge
+
+# Volume to persist database data
+volumes:
+  db-data:

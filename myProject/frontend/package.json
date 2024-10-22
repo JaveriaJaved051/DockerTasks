@@ -1,0 +1,13 @@
+{
+    "name": "frontend",
+    "version": "1.0.0",
+    "description": "Frontend for the Dockerized app",
+    "main": "index.js",
+    "scripts": {
+      "start": "ng serve --host 0.0.0.0" // For Angular, or use "react-scripts start" for React
+    },
+    "dependencies": {
+      "@angular/cli": "^13.0.0" // or React dependencies
+    }
+  }
+  
